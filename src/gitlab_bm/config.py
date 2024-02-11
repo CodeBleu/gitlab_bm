@@ -30,23 +30,27 @@ class Config(metaclass=Singleton):
     Config Classs to load from file/OS Env.
     """
     def __init__(self):
-        self._loaded_config = None
+        self.loaded_config = None
 
     def load_config(self):
         """
         Load config file
         """
-        if self._loaded_config is None:
+        if self.loaded_config is None:
             for config_location in CONFIG_LOCATIONS:
                 if os.path.isfile(config_location):
                     logging.debug("Config file found at %s", config_location)
                     with open(config_location, 'r', encoding="utf-8") as file:
-                        self._loaded_config = yaml.safe_load(file)
-                        break
+                        try:
+                            self.loaded_config = yaml.safe_load(file)
+                            break
+                        except yaml.parser.ParserError:
+                            logging.error("Config file '%s' is not valid YAML", config_location)
+                            os._exit(1)
             else:
                 logging.info("No Config file found - Use OS Env. Variables")
-                self._loaded_config = {}
-        return self._loaded_config
+                self.loaded_config = {}
+        return self.loaded_config
 
     def get_config_value(self, key, default=None):
         """
