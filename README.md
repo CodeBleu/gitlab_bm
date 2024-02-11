@@ -27,6 +27,7 @@ The order of config file checking location
 >**GLBM_SLACK_TOKEN**<br>
 >**GLBM_SLACK_CHANNEL_ID**<br>
 >**GLBM_LOGGING_LEVEL** # INFO, DEBUG, WARNING, ERROR & CRITICAL **(defualt: INFO)**<br>
+>**GLBM_SKIP_BACKUP_OPTIONS** # db, repositories, uploads, artifacts, lfs, registry, and pages **(optional)**<br>
 
 #### Config file example
 *Config file used same settings as OS Env above, but lowercase, and remove `GLBM_`
@@ -39,6 +40,7 @@ The order of config file checking location
 >**slack_token**: xoxb-xxxxxxxxxxxxx-xxxxxxxxxxx-xxxxxxxxxxxx<br>
 >**slack_channel_id**: "ABCDEFGHIJC"<br>
 >**logging_level**: "DEBUG"<br>
+>**skip_backup_options**: ['registry', 'artifacts']<br>
 
 
 ### Installation (Preferred)

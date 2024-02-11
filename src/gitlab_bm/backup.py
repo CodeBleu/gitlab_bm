@@ -14,6 +14,8 @@ import logging
 from botocore.exceptions import NoCredentialsError, EndpointConnectionError
 from .decorators import notify
 from .s3_utils import setup_s3
+from .config import config
+
 
 class BackupManager:
     """
@@ -26,6 +28,7 @@ class BackupManager:
         except TypeError:
             logging.error("One of S3 variables missing from config or OS Env")
             sys.exit(1)
+        self.active_config = config.loaded_config
 
     def _clean_temp_files(self, dir_path):
         temp_files = glob.glob(dir_path + '/*')
@@ -34,6 +37,33 @@ class BackupManager:
                 os.remove(file)
             except OSError as file_error:
                 logging.error("Error: %s : %s", {file}, {file_error.strerror})
+
+    def backup_command(self):
+        """
+        Setup Main Backup command to use.
+        """
+        available_skip_options = [
+            "db", "repositories", "uploads", "artifacts",
+            "lfs", "registry", "pages"
+        ]
+        usable_skip_options = []
+        if 'skip_backup_options' in self.active_config:
+            if not isinstance(self.active_config['skip_backup_options'], list):
+                raise ValueError("skip_backup_options is not a list")
+            skip_options = [item.lower() for item in self.active_config['skip_backup_options']]
+            usable_skip_options = list(set(available_skip_options) & set(skip_options))
+            if usable_skip_options:
+                usable_skip_options = ','.join(usable_skip_options)
+                logging.info("Running Main Backup while skipping %s", usable_skip_options)
+                return (
+                    os.system("/usr/bin/gitlab-rake "
+                              f"gitlab:backup:create CRON=1 SKIP={usable_skip_options}")
+                )
+            else:
+                raise ValueError("No valid 'skip_backup_options' in config")
+        logging.info("Running FULL Main Backup")
+        return os.system('/usr/bin/gitlab-rake gitlab:backup:create CRON=1')
+
 
     @notify
     def backup(self):
@@ -49,7 +79,7 @@ class BackupManager:
         # Create GitLab backup
         logging.info("Run main GL Backup...")
         try:
-            os.system('/usr/bin/gitlab-rake gitlab:backup:create CRON=1 SKIP=registry')
+            self.backup_command()
         except Exception as gen_e:
             raise Exception(f"Error in execution of gitlab-rake gitlab:backup:create command: {gen_e}") from gen_e
 
