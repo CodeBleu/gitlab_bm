@@ -8,6 +8,38 @@ Gitlab Backup Manager is a tool to help manage Backups of Gitlab in one place.
 <hr>
 
 ## Getting started
+### Configuration Options
+Configuration settings are used in the following order:
+>1. Config YAML file ( see order below )
+>2. OS Environment Variables
+
+The order of config file checking location
+>1. local directory where executable is running (Mostly used for dev.) - config.yaml
+>2. $HOME/.config/glbm/config.yaml
+>3. /etc/glbm_config.yaml
+
+#### OS Environment Variables
+>**GLBM_S3_BUCKET** # Bucket name **(required)**<br>
+>**GLBM_S3_ENDPOINT_URL** # URL to S3 **(required)**<br>
+>**GLBM_S3_DIRECTORY** # Directory path in bucket **(required)**<br>
+>**GLBM_DAYS_TO_KEEP** # Keep _X_ days worth of backups **(default: 30)**<br>
+>**GLBM_NOTIFICATIONS_ENABLED** #Send to Slack **(default: "false")**<br>
+>**GLBM_SLACK_TOKEN**<br>
+>**GLBM_SLACK_CHANNEL_ID**<br>
+>**GLBM_LOGGING_LEVEL** # INFO, DEBUG, WARNING, ERROR & CRITICAL **(defualt: INFO)**<br>
+
+#### Config file example
+*Config file used same settings as OS Env above, but lowercase, and remove `GLBM_`
+
+>**s3_bucket**: bucket1<br>
+>**s3_endpoint_url**: https://\<domain\>/\<path\>:\<port\><br>
+>**s3_directory**: gl_backups<br>
+>**days_to_keep**: 14<br>
+>**notifications_enabled**: "true"<br>
+>**slack_token**: xoxb-xxxxxxxxxxxxx-xxxxxxxxxxx-xxxxxxxxxxxx<br>
+>**slack_channel_id**: "ABCDEFGHIJC"<br>
+>**logging_level**: "DEBUG"<br>
+
 
 ### Installation (Preferred)
 
@@ -17,7 +49,7 @@ $ pip installl gitlab_bm
 
 After install run the following to see default opitions:
 
-```sh
+```
 $ glbm
 Usage: glbm [OPTIONS] COMMAND [ARGS]...
 
