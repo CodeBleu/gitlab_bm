@@ -35,6 +35,7 @@ get-version: ## make get-version # Get current app version
 publish:## make publish # Publish package
 	@poetry build
 	@poetry publish
+	@git push origin
 	@git tag -a "v$(VERSION)" -m "Release version $(VERSION)"
 	@git push origin "v$(VERSION)"
 

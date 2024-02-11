@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "gitlab-bm"
-version = "0.1.0"
+version = "0.1.2"
 description = "Schedule/Run Gitlab Backups"
 authors = ["Jason Hollis <400979+CodeBleu@users.noreply.github.com>"]
+homepage = "https://github.com/CodeBleu/gitlab_bm"
 license = "MIT"
 readme = "README.md"
 packages = [{include = "gitlab_bm", from = "src"}]
