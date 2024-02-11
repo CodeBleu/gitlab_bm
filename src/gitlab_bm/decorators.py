@@ -17,7 +17,7 @@ def notify(func):
             return result
         except Exception as error:
             notifications_enabled = config.get_config_value(
-                'GLBM_NOTIFICATIONS_ENABLED', default='true').lower()
+                'GLBM_NOTIFICATIONS_ENABLED', default='false').lower()
             if notifications_enabled == 'true':
                 logging.error(error)
                 send_to_slack(error)
