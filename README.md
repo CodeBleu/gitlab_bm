@@ -62,10 +62,11 @@ Options:
   --help     Show this message and exit.
 
 Commands:
-  backup            Run Main Backup
-  backup-etc        Run Backup Config and upload to S3
-  complete          Run backup, backup_etc, upload to S3
-  delete-files      Delete old files from S3 based on (X) days to keep
+  backup              Run main backup
+  backup-etc          Run Backup Config and upload to S3
+  complete            Run backup, backup_etc, upload_to_s3 and delete_files
+  delete-files        Delete old files on S3 based on (X) days to keep
+  show-active-config  Show Active Config
 ```
 
 <hr>

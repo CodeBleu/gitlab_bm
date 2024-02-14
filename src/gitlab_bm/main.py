@@ -3,10 +3,12 @@
 Gitlab Backup CLI
 """
 
+import json
 import typer
 from .logging_setup import setup_logging
 from .backup import BackupManager
 from .app_info import __version__
+from .config import config
 
 
 app = typer.Typer(no_args_is_help=True, add_completion=False,
@@ -45,6 +47,9 @@ def complete():
     backup_file = manager.backup_etc()
     manager.upload_to_s3(backup_file)
     manager.delete_files(manager.days_to_keep)
+@app.command(help="Show Active Config")
+def show_active_config():
+    print(json.dumps(config.get_active_config(), indent=4))
 
 @app.callback(invoke_without_command=True)
 def version_callback(version: bool = typer.Option(

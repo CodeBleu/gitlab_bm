@@ -13,16 +13,16 @@ def setup_s3():
     S3 Setup session and set correct variables
     """
     env_vars = {
-        "s3_bucket": config.get_config_value("GLBM_S3_BUCKET"),
-        "s3_endpoint": config.get_config_value("GLBM_S3_ENDPOINT_URL"),
-        "s3_directory": config.get_config_value("GLBM_S3_DIRECTORY")
+        "s3_bucket": config.get_active_config()['s3_bucket'],
+        "s3_endpoint": config.get_active_config()["s3_endpoint_url"],
+        "s3_directory": config.get_active_config()["s3_directory"]
     }
 
     for var_name, value in env_vars.items():
         if value is None:
             raise Exception(f"Missing {var_name} from config or OS env var.")
 
-    days_to_keep = config.get_config_value("GLBM_DAYS_TO_KEEP", 30)
+    days_to_keep = config.get_active_config().get('days_to_keep', 30)
 
     session = boto3.Session()
 

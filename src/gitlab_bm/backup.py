@@ -28,7 +28,7 @@ class BackupManager:
         except TypeError:
             logging.error("One of S3 variables missing from config or OS Env")
             sys.exit(1)
-        self.active_config = config.loaded_config
+        self.active_config = config.get_active_config()
 
     def _clean_temp_files(self, dir_path):
         temp_files = glob.glob(dir_path + '/*')
@@ -42,27 +42,29 @@ class BackupManager:
         """
         Setup Main Backup command to use.
         """
+        cmd = "/usr/bin/gitlab-rake"
+
+        if not os.path.isfile(cmd):
+            raise FileNotFoundError(f"{cmd} is missing")
+
         available_skip_options = [
             "db", "repositories", "uploads", "artifacts",
             "lfs", "registry", "pages"
         ]
         usable_skip_options = []
         if 'skip_backup_options' in self.active_config:
-            if not isinstance(self.active_config['skip_backup_options'], list):
-                raise ValueError("skip_backup_options is not a list")
             skip_options = [item.lower() for item in self.active_config['skip_backup_options']]
             usable_skip_options = list(set(available_skip_options) & set(skip_options))
             if usable_skip_options:
                 usable_skip_options = ','.join(usable_skip_options)
                 logging.info("Running Main Backup while skipping %s", usable_skip_options)
                 return (
-                    os.system("/usr/bin/gitlab-rake "
+                    os.system(f"{cmd} "
                               f"gitlab:backup:create CRON=1 SKIP={usable_skip_options}")
                 )
-            else:
-                raise ValueError("No valid 'skip_backup_options' in config")
+
         logging.info("Running FULL Main Backup")
-        return os.system('/usr/bin/gitlab-rake gitlab:backup:create CRON=1')
+        return os.system(f"{cmd} gitlab:backup:create CRON=1")
 
 
     @notify
