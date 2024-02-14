@@ -20,7 +20,7 @@ def setup_s3():
 
     for var_name, value in env_vars.items():
         if value is None:
-            raise Exception(f"Missing {var_name} from config of OS env var.")
+            raise Exception(f"Missing {var_name} from config or OS env var.")
 
     days_to_keep = config.get_config_value("GLBM_DAYS_TO_KEEP", 30)
 

@@ -48,7 +48,7 @@ class Config(metaclass=Singleton):
                             logging.error("Config file '%s' is not valid YAML", config_location)
                             os._exit(1)
             else:
-                logging.info("No Config file found - Use OS Env. Variables")
+                logging.info("No Config file found - Using OS Env. Variables")
                 self.loaded_config = {}
         return self.loaded_config
 
