@@ -5,15 +5,12 @@ Gitlab Backup CLI
 
 import json
 import typer
-from .logging_setup import setup_logging
 from .backup import BackupManager
 from .app_info import __version__
 from .config import config
 
-
 app = typer.Typer(no_args_is_help=True, add_completion=False,
                   help=f"Gitlab Backup Manager (GLBM) Ver. ({__version__})")
-setup_logging()
 manager = BackupManager()
 
 @app.command(help="Run main backup")
