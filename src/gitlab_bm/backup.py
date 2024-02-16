@@ -11,7 +11,7 @@ import glob
 import gzip
 from datetime import datetime, timedelta
 import logging
-from botocore.exceptions import NoCredentialsError, EndpointConnectionError
+from botocore.exceptions import NoCredentialsError, EndpointConnectionError, ParamValidationError
 from .decorators import notify
 from .s3_utils import setup_s3
 from .config import config
@@ -144,6 +144,8 @@ class BackupManager:
             days_to_keep = int(days_to_keep)
 
         cutoff_date = datetime.now() - timedelta(days=days_to_keep + 1)
+        if self.s3_directory == "":
+            raise ValueError("Backup directory cannot be blank")
         try:
             response = self.s3.list_objects_v2(Bucket=self.s3_bucket, Prefix=self.s3_directory)
         except AttributeError as attr_e:
@@ -154,6 +156,8 @@ class BackupManager:
             raise Exception(f"Bucket: '{self.s3_bucket}' does not exist") from exc
         except NoCredentialsError as exc:
             raise Exception(f"No AWS credentials found") from exc
+        except ParamValidationError as exc:
+            raise Exception(f"Invalid Parameter for Bucket:  '{self.s3_bucket}'") from exc
 
         if 'Contents' in response:
             for obj in response['Contents']:
