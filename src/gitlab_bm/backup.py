@@ -27,7 +27,6 @@ class BackupManager:
              self.days_to_keep, self.s3_endpoint) = setup_s3() # pylint: disable=invalid-name
         except TypeError:
             logging.error("One of S3 variables missing from config or OS Env")
-            sys.exit(1)
         self.active_config = config.get_active_config()
 
     def _clean_temp_files(self, dir_path):

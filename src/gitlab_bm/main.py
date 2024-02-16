@@ -11,6 +11,7 @@ from .config import config
 
 app = typer.Typer(no_args_is_help=True, add_completion=False,
                   help=f"Gitlab Backup Manager (GLBM) Ver. ({__version__})")
+
 manager = BackupManager()
 
 @app.command(help="Run main backup")
@@ -46,15 +47,21 @@ def complete():
     manager.delete_files(manager.days_to_keep)
 @app.command(help="Show Active Config")
 def show_active_config():
+    """
+    Show combined config from OS env variables and config file
+    """
     print(json.dumps(config.get_active_config(), indent=4))
 
 @app.callback(invoke_without_command=True)
 def version_callback(version: bool = typer.Option(
     None, "--version", is_flag=True, help="Show application Version")):
+    """
+    Allow showing version with --version flag
+    """
     if version:
         typer.echo(f"Gitlab Backup (GLBM) Version: {__version__}")
         raise typer.Exit()
 
 
 if __name__ == "__main__":
-    app.run()
+    app()
