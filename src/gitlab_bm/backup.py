@@ -142,7 +142,7 @@ class BackupManager:
         if isinstance(days_to_keep, str):
             days_to_keep = int(days_to_keep)
 
-        cutoff_date = datetime.now() - timedelta(days=days_to_keep + 1)
+        cutoff_date = datetime.now() - timedelta(days=days_to_keep)
         if self.s3_directory == "":
             raise ValueError("Backup directory cannot be blank")
         try:
